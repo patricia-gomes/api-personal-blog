@@ -11,14 +11,14 @@ class Controller {
 	//Para identificar os metodos e dar um retorno especifico para cada um deles
 	public function get_request_dados() {
 
-		switch($this->getMethod()) {
+		switch($this->get_method()) {
 			case 'GET':
 				return $_GET;
 				break;
 			case 'PUT':
 			case 'DELETE':
 				parse_str(file_get_contents('php://input'), $data);//Retorna em array de objetos
-				return (array) $data;//Converte de array de obj em array
+				return (array) $data;//Converte de array de obj para array
 
 				break;
 			case 'POST':
