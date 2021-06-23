@@ -1,5 +1,5 @@
 <?php
-namespace Api\Controllers\Blog;
+namespace Api\Controllers;
 
 use Api\Core\Controller;
 use Api\Models\Users;
@@ -7,7 +7,8 @@ use Api\Models\Users;
 class loginController extends Controller
 {
 
-	public function index() { 
+	public function index()
+	{ 
 		$array = array('error'=>'');
 
 		$method = $this->get_method();

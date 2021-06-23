@@ -1,114 +1,72 @@
 <?php
+
 namespace Api\Core;
 
 use Api\Helper\Route;
 
-class Core extends Route {
+class Core extends Route
+{
 
 	public function run() {
-
+		
 		$url = '/';
+		//Pega a url enviado pelo user
 		if(isset($_GET['url'])) {
-			$url .= $_GET['url'];
+			$url.= $_GET['url'];//Concatena o dominio com o que foi digitado pelo user
 		}
 
+		//Vai fazer a transformação baseada na route
 		$url = $this->checkRoutes($url);
 
 		$params = array();
-
+		//Verificando Se a pessoa enviou alguma url
 		if(!empty($url) && $url != '/') {
+			//Caso ele tenha enviado um endereço especifico do site
 			$url = explode('/', $url);
+			//Remove o primeiro registro do array
 			array_shift($url);
 			
-			// Captando a area onde estao o controller
-			// Percorrendo as rotas definidas acima
-			foreach($url as $key => $value) :
+			$currentControler = $url[0].'Controller';//fica (homeController)
+			array_shift($url);//remove novamente
 
-				// VERIFICA se o valor enviado pela url é igual a key da $routers
-				if(!empty($url[0]) && $url[0] == $key) {
-					
-					// Definindo a pasta de cada controller de acordo com a area
-					if($url[0] == 'admin') {
-						array_shift($url);
+			//Verificando se o user enviou o action pela url
+			if(isset($url[0]) &&  !empty($url[0])) {
+				$currentAction = $url[0];
+				array_shift($url);
+			} else {
 
-						// Controller-Area-Action padrão da area admin
-						if(empty($url[0])) {
-							$currentArea = 'Admin';
-							$currentController = 'adminController';
-							$currentAction = 'index';
-						} else {
-							
-							$currentArea = 'Admin';
-							
-							// Capturando o controller da area admin	
-							$currentController = $url[0].'Controller';
-							array_shift($url);
-							// Capturando a action da area admin
-							if(isset($url[0]) && !empty($url[0])) {
-								
-								$currentAction = $url[0];
-								array_shift($url);
-								
-							} else {
-								$currentAction = 'index';
-							}
+				$currentAction = 'index';
+			}
+			//Parametros
+			if(count($url) > 0) {
+				$params = $url;
+			}
 
-							if(count($url) > 0) {
-								$params = $url;
-							}
-						}	
-
-					} else { 
-
-						$currentArea = 'Blog';
-
-						// Capturando o controller	
-						$currentController = $url[0].'Controller';
-						array_shift($url);
-
-						// Capturando a action
-						if(isset($url[0]) && !empty($url[0])) {
-							$currentAction = $url[0];
-							array_shift($url);
-						} else {
-							$currentAction = 'index';
-						}
-
-						if(count($url) > 0) {
-							$params = $url;
-						}			
-					}
-				}
-			endforeach;
-			
 		} else {
-			$currentArea = 'Blog';
-			$currentController = 'homeController';
-			$currentAction = 'index';		
+			//Controller e action padrao
+			$currentControler = 'HomeController';
+			$currentAction = 'index';
 		}
+
+		//Transformando a primeira letra em Maiuscula
+		$currentControler = ucfirst($currentControler);
+
+		$prefix = 'Api\Controllers\\';
 		
-
-		// Verifica se o controller existe
-		if(!file_exists('Api/Controllers/'.$currentArea.'/'.$currentController.'.php')) {
-			$currentArea = 'Blog';
-			$currentController = 'notfoundController';
+		//Verifica se o controller existe
+		if(!file_exists('Api/Controllers/'.$currentControler.'.php') ||
+			!method_exists($prefix.$currentControler, $currentAction)) {
+			//Substitui pelo nosso controller padrão para páginas não encontradas
+			$currentControler = 'NotfoundController';
 			$currentAction = 'index';
 		}
 
-		// Veririca se o método existe
-		if(!method_exists('Api\\Controllers\\'.$currentArea.'\\'.$currentController, $currentAction)) {
-			$currentArea = 'Blog';
-			$currentController = 'notfoundController';
-			$currentAction = 'index';
-		} 
+		//Instancia o controller
+		$newController = $prefix.$currentControler;
+		$c = new $newController();
 
-		// Caminho do controller
-		$currentController = "Api\\Controllers\\".$currentArea."\\".$currentController;
-
-		$c = new $currentController();
-
+		//Instancia a action
 		call_user_func_array(array($c, $currentAction), $params);
-		
 	}
 
 	public function checkRoutes($url) {
