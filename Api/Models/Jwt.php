@@ -2,14 +2,10 @@
 namespace Api\Models;
 
 use Api\Core\Model;
+use Api\Core\Config;
 
 class Jwt extends Model {
 
-	private $secret;
-
-	public function __construct() {
-		$this->secret = "ij35h@";
-	}
 
 	//Cria e retorna o hash
 	public function create($dados) {
@@ -22,7 +18,7 @@ class Jwt extends Model {
 		$payloadBase = $this->base64url_encode($payload);
 
 		//Gerar a assinatura
-		$signature = hash_hmac("sha256", $headerBase.".".$payloadBase, $this->secret, true);
+		$signature = hash_hmac("sha256", $headerBase.".".$payloadBase, Config::JWT_SECRET_KEY, true);
 		$signatureBase = $this->base64url_encode($signature);
 
 		//Juntando os 3 códigos do header, payload e signature
@@ -45,7 +41,7 @@ class Jwt extends Model {
 		if(count($jwt_split) == 3) {
 			/*vamos criar uma nova assinatura baseados nos 2 primeiros itens do nosso token*/
 			//Código da criação da assinatura(signature)
-			$signature = hash_hmac("sha256", $jwt_split[0].".".$jwt_split[1], $this->secret, true);
+			$signature = hash_hmac("sha256", $jwt_split[0].".".$jwt_split[1],  Config::JWT_SECRET_KEY, true);
 			$signatureBase = $this->base64url_encode($signature);
 
 			//Verificando se assinatura é a mesma

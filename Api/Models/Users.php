@@ -30,6 +30,10 @@ class Users extends Model {
 		}
 	}
 
+	public function get_ID() {
+		return $this->id_user;
+	}
+
 	public function create_jwt() {
 		$jwt = new Jwt();
 
