@@ -21,7 +21,8 @@ class Route {
 		$routes['/categories'] = '/categories/index';
 		$routes['/categories/register/{id}'] = '/categories/register/:id';
 		$routes['/editor/edit/{id}'] = '/editor/edit/:id';
-		$routes['/categories/edit/{id}'] = '/categories/edit/:id';
+		$routes['/categories/edit/{id_user}'] = '/categories/edit/:id_user';
+		$routes['/categories/delete/{id_user}'] = '/categories/delete/:id_user';
 		
 		$routes['/'] = '/home/index';
 		
