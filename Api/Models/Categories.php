@@ -7,8 +7,7 @@ class Categories extends Model
 {
 
 
-	public function new_categorie($categorie)
-	{
+	public function new_categorie($categorie) {
 
 		$query = $this->pdo->prepare("INSERT INTO categories (categorie) VALUES (:categorie)");
 		$query->bindValue(':categorie', $categorie);
@@ -16,8 +15,7 @@ class Categories extends Model
 		return true;
 	}
 
-	public function get_categories()
-	{
+	public function get_categories() {
 		$dados = array();
 
 		$query = $this->pdo->prepare("SELECT * FROM categories");
