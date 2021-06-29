@@ -16,11 +16,11 @@ class Route {
 
 		//Endpoints Painel de controle
 		$routes['/admin'] = '/admin/index';
-		$routes['/admin/editor'] = '/admin/editor';
-		$routes['/editor/register'] = '/editor/index';
+		$routes['/editor/register/{id}'] = '/editor/index/:id';
+		$routes['/editor/edit/{id}'] = '/editor/edit/:id';
+		$routes['/posts/delete/{id}'] = '/editor/delete/:id';
 		$routes['/categories'] = '/categories/index';
 		$routes['/categories/register/{id}'] = '/categories/register/:id';
-		$routes['/editor/edit/{id}'] = '/editor/edit/:id';
 		$routes['/categories/edit/{id_user}'] = '/categories/edit/:id_user';
 		$routes['/categories/delete/{id_user}'] = '/categories/delete/:id_user';
 		
